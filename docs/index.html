@@ -1,0 +1,383 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><title>Annuity Factory Masterclass</title><link rel="manifest" href="data:application/manifest+json,{"name":"Annuity Factory","short_name":"AF Masterclass","display":"standalone","background_color":"#0b0c0e","theme_color":"#0b0c0e"}"/><style>
+:root{
+--bg:#0b0c0e;--elev:#12141a;--surface:#161a22;--surface2:#1c212c;
+--fg:#eef0f4;--muted:#9aa3b2;--subtle:#6b7382;--border:#2a3040;
+--accent:#5b8def;--accent-soft:#243556;--success:#3d9a6a;--success-soft:#163528;
+--warn:#c9a227;--danger:#d46a6a;--chart1:#5b8def;--chart2:#3d9a6a;--chart3:#c9a227;
+--chart4:#8b7cf6;--chart5:#e07a5f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:var(--accent);text-decoration:none}
+.hidden{display:none!important}
+#app{min-height:100dvh;display:flex;flex-direction:column}
+header.appbar{height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--bg) 92%,transparent);position:sticky;top:0;z-index:20;backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:-.02em}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:var(--surface2);color:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:700}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn{height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);font-size:13px;font-weight:500}
+.btn.primary{background:var(--accent);border-color:transparent;color:#fff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+main{flex:1}
+.home{max-width:960px;margin:0 auto;padding:28px 16px 64px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+h1{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.03em;line-height:1.1;margin:0 0 12px}
+.lead{color:var(--muted);font-size:1.05rem;line-height:1.55;max-width:62ch}
+.thesis{color:var(--subtle);font-size:.92rem;line-height:1.55;max-width:62ch;margin-top:12px}
+.tagline{color:var(--accent);font-weight:600;margin-top:10px;font-size:.95rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 28px}
+.grid3{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:720px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.28)}
+.card h3{margin:0 0 6px;font-size:.95rem}
+.card p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.45}
+.chapters{display:grid;gap:12px;margin-top:18px}
+.chapter{display:block;padding:18px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:inherit}
+.chapter:hover{border-color:#3a4356}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.badge{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
+.badge.accent{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+/* PRESENT MODE */
+#present{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
+#present.hidden{display:none}
+.p-top{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--border)}
+.p-progress{height:3px;background:var(--surface2)}
+.p-progress>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.p-stage{flex:1;overflow:auto;display:flex;flex-direction:column;justify-content:center;padding:20px 18px 24px}
+@media(min-width:900px){.p-stage{padding:36px 64px}}
+.p-foot{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-top:1px solid var(--border)}
+.slide-eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.slide-title{font-size:clamp(1.6rem,4.5vw,3rem);letter-spacing:-.03em;line-height:1.12;margin:0 0 14px;font-weight:600}
+.slide-sub{font-size:clamp(1rem,2.2vw,1.35rem);color:var(--muted);margin:0 0 18px}
+.stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media(min-width:800px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat .v{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:650;margin-top:6px;font-variant-numeric:tabular-nums;color:var(--accent)}
+.stat .h{font-size:12px;color:var(--subtle);margin-top:8px;line-height:1.4}
+.bullets{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.bullets li{display:flex;gap:12px;font-size:clamp(.95rem,2vw,1.2rem);line-height:1.35}
+.bullets li:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:.55em;flex:0 0 auto}
+.compare{display:grid;gap:12px}
+@media(min-width:800px){.compare{grid-template-columns:1fr 1fr}}
+.compare .col{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;border-left:4px solid var(--border)}
+.compare .col.bad{border-left-color:var(--danger)}
+.compare .col.good{border-left-color:var(--success)}
+.compare h4{margin:0 0 12px}
+.compare.bad h4,.compare .col.bad h4{color:var(--danger)}
+.compare .col.good h4{color:var(--success)}
+.compare ul{margin:0;padding-left:18px;color:var(--muted);line-height:1.5}
+.script{border-left:3px solid var(--accent);background:var(--surface2);border-radius:0 12px 12px 0;padding:18px 20px}
+.script .lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.script .body{white-space:pre-line;font-size:clamp(.95rem,2vw,1.2rem);line-height:1.55}
+.formula{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;font-family:ui-monospace,SF Mono,Menlo,monospace;color:var(--accent);font-size:clamp(.95rem,2vw,1.35rem);margin:10px 0 16px;overflow:auto}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px}
+canvas.chart{width:100%;height:260px;display:block}
+.graph-svg{width:100%;height:min(52vh,420px);background:var(--surface);border:1px solid var(--border);border-radius:16px}
+.hint{font-size:11px;color:var(--subtle);text-align:center}
+.course-view{max-width:880px;margin:0 auto;padding:20px 16px 80px}
+.course-view h2{font-size:1.35rem;margin:28px 0 12px;letter-spacing:-.02em}
+.course-view p,.course-view li{color:var(--muted);line-height:1.55}
+.script-card{margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{border-bottom:1px solid var(--border);padding:10px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+td{color:var(--fg)}
+</style></head><body><div id="app"><header class="appbar"><div class="brand"><div class="brand-mark">AF</div><span>Annuity Factory Masterclass</span></div><div class="nav-actions"><button class="btn primary" id="btnPresent">Present live</button><button class="btn" id="btnCourse">Course</button><button class="btn ghost" id="btnPlaybook">Playbook</button></div></header><main id="main"></main></div><div id="present" class="hidden"><div class="p-top"><button class="btn ghost" id="pExit">Exit</button><span class="hint" id="pCount">1 / 1</span><button class="btn" id="pFs">Fullscreen</button></div><div class="p-progress"><i id="pBar"></i></div><div class="p-stage" id="pStage"></div><div class="p-foot"><button class="btn" id="pPrev">Prev</button><span class="hint">← → · Space · swipe · F fullscreen</span><button class="btn primary" id="pNext">Next</button></div></div><script>
+const DATA = {
+demo: {medianIncome:79000,under100k:70,under75k:46,under50k:25,firstAge:51,before65:84,currentAge:75,retired:78,female:51},
+income:[{t:"Under $50k",p:25,c:"#e07a5f"},{t:"$50–75k",p:21,c:"#c9a227"},{t:"$75–100k",p:24,c:"#5b8def"},{t:"$100k+",p:30,c:"#3d9a6a"}],
+funding:[{t:"General Savings",p:54},{t:"Current Income",p:40},{t:"Inheritance",p:35},{t:"RE/Business",p:17},{t:"Bonus",p:10}],
+motives:[{t:"Peace of mind",p:88},{t:"Principal safety",p:89},{t:"Guaranteed income",p:81},{t:"Not burden kids",p:79},{t:"Market/inflation shield",p:74}],
+puzzle:{willing:50,actual:13},
+fia:[{t:"Bull +10%",idx:10,cr:6},{t:"Growth +4%",idx:4,cr:1.2},{t:"Crash −15%",idx:-15,cr:0}],
+steps:[
+{id:1,title:"Uncover Vulnerability Gap",formula:"Gap = Mandatory Bills − Social Security Floor",action:"Audit bills vs guaranteed income. Name the dollar gap.",script:"For our parents' generation, retirement was a three-legged stool: corporate pensions, Social Security, and personal savings. Today, employer pensions are nearly gone. That put market, sequence, and longevity risk on your family's shoulders.\\n\\nSocial Security was designed to replace only about 30–40% of working income. Our first job is to measure your Vulnerability Gap — the dollars by which mandatory bills exceed your Social Security floor."},
+{id:2,title:"Re-frame as personal pension",formula:"Allocate only capital needed to close the Gap",action:"De-jargonize. Fund only the floor; leave rest liquid.",script:"An annuity is not an aggressive growth vehicle. It is a contract for a privately secured personal pension.\\n\\nWhen capital goes into a Fixed Indexed Annuity, you buy an income foundation. No matter what happens to stocks or rates, a guaranteed structure can support life income. You eliminate the fear of outliving your money."},
+{id:3,title:"Zero is your hero",formula:"R = min(C, max(0, R_index × P − S))",action:"Show bull / moderate / crash scenarios.",script:"The single most important rule: Zero is your hero.\\n\\nWhen the market rises, you can participate subject to caps or participation rates. If the market crashes 20–40%, your account does not lose a dollar to market declines. Principal and locked-in gains stay intact."},
+{id:4,title:"Legacy & liquidity",formula:"~10% annual free withdrawal + death benefit",action:"Kill the 'company keeps money' myth.",script:"Modern deferred contracts include death benefits. Remaining value goes to named beneficiaries — typically outside probate.\\n\\nYou keep access. Most contracts allow annual penalty-free withdrawals — often about 10% — for unexpected needs."},
+{id:5,title:"Dual-choice close",formula:"Recap Gap → Dual Choice → Application",action:"Option A do nothing vs Option B fund the floor.",script:"We measured your Vulnerability Gap. Two paths:\\n\\nOption A — Do nothing. Leave the nest egg fully exposed to sequence-of-returns and longevity risk.\\n\\nOption B — Act. Fund only the personal pension floor with a contractual 0% market-loss floor. Keep remaining assets free to grow.\\n\\nProtect principal. Complete the application today."}
+],
+objections:[
+["I don't have enough money.","We only move capital needed to close your Vulnerability Gap. The rest stays liquid."],
+["What if I need cash?","Typical ~10% annual penalty-free withdrawal. This is a floor, not a lockbox on everything."],
+["What if I die early?","Death benefit provisions pass remaining value to named beneficiaries."],
+["Isn't this only for rich people?","Opposite. Median owner income is about $79,000. Seven in ten owners earn under $100,000."],
+["What if the company fails?","State guaranty associations cover benefits up to statutory limits (often $250k PV; higher in some states)."],
+["I already have a 401(k).","A 401(k) accumulates. It does not guarantee a paycheck for life. We convert a slice into a pension floor."]
+]
+};
+const SLIDES = [
+{k:"title",e:"Annuity Factory Masterclass",t:"Generational Wealth Sales for Middle America",s:"Against the grain. For the majority.",b:"Three chapters. One system. Every person on this call leaves able to open, teach, and close."},
+{k:"bullets",e:"Agenda",t:"What we master today",items:["Chapter 1 — The $79K Reality: who actually buys","Chapter 2 — Zero Is Your Hero: product + tax + protection","Chapter 3 — Close the Vulnerability Gap: ethical 5-step close","Knowledge graphs: market · product · sales pipeline","Team scripts for the next iPad appointment"]},
+{k:"compare",e:"Doctrine",t:"Flip the script",left:["Sell complexity up-market","Treat middle America as too small","Hide mechanics; chase commission","Ignore Medicare / modest income"],right:["Sell clarity & family floors down-market","Target proven owners: median ~$79k","Teach until trust is non-negotiable","Serve fixed-income & dual-eligible households"],lt:"Old model",rt:"Our model"},
+{k:"section",e:"Chapter 1 · Metric $79,000",t:"The $79K Reality",s:"Debunk the HNW myth. Own the real market."},
+{k:"stats",e:"Gallup / Committee of Annuity Insurers",t:"Who owns individual annuities",stats:[
+{l:"Median household income",v:"$79k",h:"Down from $96k in 2001"},
+{l:"Owners under $100k",v:"70%",h:"Primary middle-class share"},
+{l:"Owners under $50k",v:"25%",h:"Low-to-moderate income"},
+{l:"Owners under $75k",v:"46%",h:"Nearly half of all owners"}
+]},
+{k:"chart",e:"Graph · Income distribution",t:"Owner income tiers",s:"Your market is not the yacht club — it is the $79k household.",chart:"income"},
+{k:"stats",e:"Buyer profile",t:"Age, gender, retirement",stats:[
+{l:"Median first purchase age",v:"51",h:"84% buy before 65"},
+{l:"Median current age",v:"75",h:"Mean age 74"},
+{l:"Retired",v:"78%",h:"+13 pts since 2013"},
+{l:"Female / Male",v:"51/49",h:"Female majority since 1997"}
+]},
+{k:"chart",e:"Graph · Funding sources",t:"How they fund contracts",s:"Risk mitigation, not speculation.",chart:"funding"},
+{k:"chart",e:"Graph · Motivations",t:"Why they buy",s:"Peace of mind and principal safety dominate.",chart:"motives"},
+{k:"chart",e:"The Annuity Puzzle",t:"50% willing · ~12–13% buy",s:"Barrier is complexity + distribution failure — not bequest desire.",chart:"puzzle"},
+{k:"graph",e:"Knowledge graph · Market",t:"Demographic reality map",graph:"market"},
+{k:"script",e:"Team script",t:"Open with the real buyer",script:"There's a myth that annuities are only for the wealthy. The data says the median owner household earns about $79,000 a year, and 70% of owners earn under $100,000. You're not 'too small' for this conversation — you are the core market."},
+{k:"section",e:"Chapter 2 · Metric 0%",t:"Zero Is Your Hero",s:"Product architecture · tax · state protection"},
+{k:"compare",e:"Product alignment",t:"Same wrapper. Different job.",lt:"HNW · PPVA",rt:"Everyday · MYGA / FIA",left:["Tax alpha on alternatives","IDF / SMA rebalancing","Institutional unbundled fees","Creditor shield in 26 states"],right:["Income floor & longevity hedge","General account + index options","0% absolute return floor","Independent agents / banks / BDs"]},
+{k:"bullets",e:"FIA engine",t:"Bonds + option budget",items:["90–95% of premium → high-grade fixed income (principal backstop)","Remaining yield = option budget for OTC calls on indices","Credited interest follows option payoff, limited by C / P / S","You do not own the S&P — you own a structured floor + capped upside"]},
+{k:"formula",e:"Master formula",t:"Four-stage credit sequence",f:"R_credited = min(C, max(0, R_index × P − S))",items:["1 · Participation: R_part = R_index × P","2 · Spread: R_spread = R_part − S","3 · Floor: R_floored = max(0, R_spread)  ← Zero is your hero","4 · Cap: R_credited = min(C, R_floored)"]},
+{k:"chart",e:"Scenario lab",t:"Index vs FIA credited",s:"Example: P=80%, S=2%, C=6%, Floor=0%",chart:"fia"},
+{k:"bullets",e:"IRC Section 72",t:"Taxation in one screen",items:["Non-qualified: tax-deferred accumulation","Partial withdrawals: LIFO — earnings first as ordinary income","Before 59½: +10% penalty on taxable earnings (§72(q))","Annuitized: exclusion ratio splits each check into basis vs earnings"]},
+{k:"stats",e:"State guaranty / NOLHGA",t:"If a carrier fails",stats:[
+{l:"Baseline most states",v:"$250k",h:"PV of benefits / owner / company"},
+{l:"NY · NJ · WA",v:"$500k",h:"Higher statutory ceilings"},
+{l:"California",v:"80%",h:"Of value up to $250k co-insurance"},
+{l:"Coverage basis",v:"Residence",h:"Owner’s state at insolvency"}
+]},
+{k:"graph",e:"Knowledge graph · Product",t:"Technical architecture map",graph:"product"},
+{k:"script",e:"Team script",t:"Zero is your hero",script:"When the market is up, you can participate — subject to the contract's cap or participation rate. When the market is down hard, your account is not down hard with it. The floor is zero. That is the hero of the contract."},
+{k:"section",e:"Chapter 3 · Metric 50% → 12%",t:"Close the Vulnerability Gap",s:"Ethical high-impact sales for middle & modest-income households"},
+{k:"formula",e:"Step 1",t:"Uncover the Vulnerability Gap",f:"Gap = Mandatory Monthly Bills − Social Security Floor",items:["Walk the three-legged stool collapse","SS replaces ~30–40% of working income by design","Name the dollar gap out loud — that sizes the product"]},
+{k:"bullets",e:"Steps 2–4",t:"Reframe · Prove floor · Legacy",items:["Step 2: Call it a personal pension; fund only the Gap","Step 3: Demonstrate 0% floor with crash scenarios","Step 4: Death benefit + ~10% free withdrawal access"]},
+{k:"compare",e:"Step 5 · Dual choice close",t:"Decisive action",lt:"Option A — Do nothing",rt:"Option B — Fund the floor",left:["100% market exposure","Sequence-of-returns risk intact","Longevity risk unhedged","Bills still depend on good years"],right:["Only Gap capital moved","Contractual 0% market-loss floor","Income structure for life","Remaining assets free to grow"]},
+{k:"graph",e:"Knowledge graph · Sales pipeline",t:"Ethical close pipeline",graph:"sales"},
+{k:"script",e:"Full close script",t:"Word-for-word dual choice",script:"We measured your Vulnerability Gap. Two paths:\\n\\nOption A — Do nothing. Leave the nest egg fully exposed.\\n\\nOption B — Act. Fund only the personal pension floor with a contractual 0% market-loss floor. Keep remaining assets free to grow.\\n\\nProtect principal. Complete the application today."},
+{k:"bullets",e:"Objection stack",t:"Six answers every rep owns",items:["Not enough money → only fund the Gap","Need cash → typical ~10% free withdrawal","Die early → death benefit to beneficiaries","Only for rich? → median $79k; 70% under $100k","Company fails? → state guaranty limits","I have a 401(k) → accumulation ≠ lifetime paycheck"]},
+{k:"bullets",e:"Memorize",t:"Four formulas that run the firm",items:["Vulnerability Gap = Bills − SS (and other guaranteed income)","FIA credit = min(C, max(0, R_index × P − S))","Exclusion ratio = Investment in contract ÷ Expected return","LIFO withdrawals = earnings first, basis last"]},
+{k:"close",e:"Deploy",t:"Leave this room dangerous",s:"Open with $79k. Teach zero. Measure the Gap. Close with dual choice.",items:["Send every teammate this live link for iPad study","Run Present mode on Google Meet screen share","Drill scripts out loud","Next appointment: Gap first, product second, paperwork third"]}
+];
+const GRAPHS = {
+market:{nodes:[
+{id:"myth",l:"HNW Myth",x:12,y:18,t:"risk"},{id:"data",l:"Gallup Data",x:38,y:12,t:"core"},
+{id:"m79",l:"$79k Median",x:62,y:20,t:"metric"},{id:"u100",l:"70% <$100k",x:82,y:14,t:"metric"},
+{id:"motive",l:"Safety 89%",x:48,y:42,t:"metric"},{id:"puzzle",l:"Annuity Puzzle",x:35,y:72,t:"risk"},
+{id:"will",l:"50% Willing",x:58,y:78,t:"metric"},{id:"buy",l:"~12% Buy",x:80,y:72,t:"risk"},
+{id:"you",l:"You = Fix",x:50,y:92,t:"action"}
+],edges:[["myth","data"],["data","m79"],["data","u100"],["data","motive"],["m79","puzzle"],["puzzle","will"],["will","buy"],["buy","you"],["puzzle","you"]]},
+product:{nodes:[
+{id:"c",l:"Client Capital",x:50,y:10,t:"core"},{id:"ppva",l:"PPVA",x:18,y:30,t:"product"},
+{id:"fia",l:"MYGA/FIA",x:78,y:30,t:"product"},{id:"bonds",l:"90–95% Bonds",x:62,y:48,t:"metric"},
+{id:"opt",l:"Option Budget",x:88,y:48,t:"metric"},{id:"floor",l:"0% Floor",x:68,y:82,t:"metric"},
+{id:"credit",l:"Credited Rate",x:78,y:96,t:"core"},{id:"tax",l:"IRC §72",x:22,y:58,t:"risk"}
+],edges:[["c","ppva"],["c","fia"],["fia","bonds"],["fia","opt"],["opt","floor"],["floor","credit"],["ppva","tax"],["fia","tax"]]},
+sales:{nodes:[
+{id:"o",l:"Open $79k",x:50,y:10,t:"action"},{id:"s1",l:"1 Gap",x:50,y:28,t:"core"},
+{id:"s2",l:"2 Pension frame",x:50,y:44,t:"action"},{id:"s3",l:"3 Zero floor",x:50,y:60,t:"metric"},
+{id:"s4",l:"4 Legacy",x:50,y:76,t:"product"},{id:"a",l:"Option A",x:22,y:90,t:"risk"},
+{id:"b",l:"Option B",x:72,y:90,t:"action"}
+],edges:[["o","s1"],["s1","s2"],["s2","s3"],["s3","s4"],["s4","a"],["s4","b"]]}
+};
+function el(html){const d=document.createElement('div');d.innerHTML=html.trim();return d.firstChild}
+function drawBar(canvas, rows, key='p'){
+const dpr=window.devicePixelRatio||1;
+const w=canvas.clientWidth,h=canvas.clientHeight;
+canvas.width=w*dpr;canvas.height=h*dpr;
+const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+ctx.clearRect(0,0,w,h);
+const max=Math.max(...rows.map(r=>r[key]),1);
+const pad=28, barH=Math.min(28,(h-pad*2)/rows.length-8);
+rows.forEach((r,i)=>{
+const y=pad+i*(barH+10);
+const bw=((w-pad*2-100)/max)*r[key];
+ctx.fillStyle='#2a3040';ctx.fillRect(pad+100,y,w-pad*2-100,barH);
+ctx.fillStyle=r.c||'#5b8def';ctx.fillRect(pad+100,y,bw,barH);
+ctx.fillStyle='#9aa3b2';ctx.font='12px system-ui';ctx.textAlign='left';
+ctx.fillText(r.t,pad,y+barH*0.72);
+ctx.fillStyle='#eef0f4';ctx.textAlign='right';
+ctx.fillText(r[key]+'%',w-pad,y+barH*0.72);
+});
+}
+function drawGroup(canvas, rows){
+const dpr=window.devicePixelRatio||1;
+const w=canvas.clientWidth,h=canvas.clientHeight;
+canvas.width=w*dpr;canvas.height=h*dpr;
+const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+ctx.clearRect(0,0,w,h);
+const n=rows.length,gap=16,bw=(w-40-gap*(n-1))/n;
+const max=Math.max(...rows.flatMap(r=>[Math.abs(r.idx),Math.abs(r.cr)]),1);
+const mid=h*0.55;
+rows.forEach((r,i)=>{
+const x=20+i*(bw+gap);
+const h1=(Math.abs(r.idx)/max)*(h*0.35);
+const h2=(Math.abs(r.cr)/max)*(h*0.35);
+ctx.fillStyle='#e07a5f';
+if(r.idx>=0) ctx.fillRect(x,mid-h1,bw*0.4,h1); else ctx.fillRect(x,mid,bw*0.4,h1);
+ctx.fillStyle='#3d9a6a';
+if(r.cr>=0) ctx.fillRect(x+bw*0.45,mid-h2,bw*0.4,h2); else ctx.fillRect(x+bw*0.45,mid,bw*0.4,h2);
+ctx.fillStyle='#9aa3b2';ctx.font='11px system-ui';ctx.textAlign='center';
+ctx.fillText(r.t,x+bw/2,h-12);
+});
+ctx.fillStyle='#9aa3b2';ctx.font='11px system-ui';ctx.textAlign='left';
+ctx.fillText('Index',20,18);ctx.fillStyle='#e07a5f';ctx.fillRect(55,10,10,10);
+ctx.fillStyle='#9aa3b2';ctx.fillText('Credited',90,18);ctx.fillStyle='#3d9a6a';ctx.fillRect(145,10,10,10);
+}
+function drawPuzzle(canvas){
+const dpr=window.devicePixelRatio||1;
+const w=canvas.clientWidth,h=canvas.clientHeight;
+canvas.width=w*dpr;canvas.height=h*dpr;
+const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+ctx.clearRect(0,0,w,h);
+const cx=w/2,cy=h/2-6,R=Math.min(w,h)*0.32;
+const parts=[{v:DATA.puzzle.actual,c:'#c9a227',l:'Buy ~13%'},{v:DATA.puzzle.willing-DATA.puzzle.actual,c:'#2a3040',l:'Gap'},{v:100-DATA.puzzle.willing,c:'#5b8def',l:'Willing pool rest'}];
+// simpler donut: willing vs buy
+const data=[{v:13,c:'#c9a227'},{v:37,c:'#5b8def'},{v:50,c:'#2a3040'}];
+let a=-Math.PI/2;const sum=data.reduce((s,d)=>s+d.v,0);
+data.forEach(d=>{
+const ang=d.v/sum*Math.PI*2;
+ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,a,a+ang);ctx.closePath();ctx.fillStyle=d.c;ctx.fill();
+a+=ang;
+});
+ctx.beginPath();ctx.arc(cx,cy,R*0.55,0,Math.PI*2);ctx.fillStyle='#161a22';ctx.fill();
+ctx.fillStyle='#eef0f4';ctx.font='600 18px system-ui';ctx.textAlign='center';
+ctx.fillText('50% → 13%',cx,cy+6);
+ctx.fillStyle='#9aa3b2';ctx.font='12px system-ui';
+ctx.fillText('Willing  ·  Actual buy',cx,cy+26);
+}
+function drawGraph(svg, id){
+const g=GRAPHS[id]; if(!g) return;
+const tone={core:'#1c212c',metric:'#243556',action:'#163528',risk:'#3a3010',product:'#161a22'};
+const stroke={core:'#5b8def',metric:'#5b8def',action:'#3d9a6a',risk:'#c9a227',product:'#3a4356'};
+const by={}; g.nodes.forEach(n=>by[n.id]=n);
+let edges='';
+g.edges.forEach(([a,b])=>{
+const A=by[a],B=by[b];
+edges+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#3a4356" stroke-width="0.4"/>`;
+});
+let nodes='';
+g.nodes.forEach(n=>{
+nodes+=`<rect x="${n.x-9}" y="${n.y-3.2}" width="18" height="6.4" rx="1.4" fill="${tone[n.t]||tone.core}" stroke="${stroke[n.t]||'#5b8def'}" stroke-width="0.35"/><text x="${n.x}" y="${n.y+0.9}" text-anchor="middle" fill="#eef0f4" font-size="2.3" font-weight="600">${n.l}</text>`;
+});
+svg.innerHTML=edges+nodes;
+}
+function renderSlide(slide){
+const stage=document.getElementById('pStage');
+let html=`<div class="slide-eyebrow">${slide.e||''}</div><h2 class="slide-title">${slide.t}</h2>`;
+if(slide.s) html+=`<p class="slide-sub">${slide.s}</p>`;
+if(slide.b) html+=`<p class="slide-sub">${slide.b}</p>`;
+if(slide.k==='stats'){
+html+=`<div class="stats">${slide.stats.map(s=>`<div class="stat"><div class="l">${s.l}</div><div class="v">${s.v}</div>${s.h?`<div class="h">${s.h}</div>`:''}</div>`).join('')}</div>`;
+}
+if(slide.k==='bullets'||slide.k==='close'){
+html+=`<ul class="bullets">${(slide.items||[]).map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
+if(slide.k==='compare'){
+html+=`<div class="compare"><div class="col bad"><h4>${slide.lt||'Left'}</h4><ul>${slide.left.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="col good"><h4>${slide.rt||'Right'}</h4><ul>${slide.right.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`;
+}
+if(slide.k==='script'){
+html+=`<div class="script"><div class="lbl">Say this</div><div class="body">${slide.script}</div></div>`;
+}
+if(slide.k==='formula'){
+html+=`<div class="formula">${slide.f}</div>`;
+if(slide.items) html+=`<ul class="bullets">${slide.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
+if(slide.k==='chart'){
+html+=`<div class="chart-wrap"><canvas class="chart" id="cLive"></canvas></div>`;
+}
+if(slide.k==='graph'){
+html+=`<svg class="graph-svg" id="gLive" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"></svg>`;
+}
+stage.innerHTML=html;
+requestAnimationFrame(()=>{
+const c=document.getElementById('cLive');
+if(c){
+if(slide.chart==='income') drawBar(c, DATA.income.map(x=>({t:x.t,p:x.p,c:x.c})));
+if(slide.chart==='funding') drawBar(c, DATA.funding);
+if(slide.chart==='motives') drawBar(c, DATA.motives);
+if(slide.chart==='puzzle') drawPuzzle(c);
+if(slide.chart==='fia') drawGroup(c, DATA.fia);
+}
+const g=document.getElementById('gLive');
+if(g) drawGraph(g, slide.graph);
+});
+}
+let idx=0;
+function show(i){
+idx=Math.max(0,Math.min(SLIDES.length-1,i));
+renderSlide(SLIDES[idx]);
+document.getElementById('pCount').textContent=`${idx+1} / ${SLIDES.length}`;
+document.getElementById('pBar').style.width=`${((idx+1)/SLIDES.length)*100}%`;
+document.getElementById('pPrev').disabled=idx===0;
+document.getElementById('pNext').disabled=idx===SLIDES.length-1;
+}
+function openPresent(start=0){
+document.getElementById('present').classList.remove('hidden');
+show(start);
+}
+function closePresent(){
+document.getElementById('present').classList.add('hidden');
+if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+document.getElementById('pPrev').onclick=()=>show(idx-1);
+document.getElementById('pNext').onclick=()=>show(idx+1);
+document.getElementById('pExit').onclick=closePresent;
+document.getElementById('pFs').onclick=()=>{
+if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+else document.exitFullscreen().catch(()=>{});
+};
+window.addEventListener('keydown',e=>{
+if(document.getElementById('present').classList.contains('hidden')) return;
+if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(idx+1)}
+if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(idx-1)}
+if(e.key==='f'||e.key==='F') document.getElementById('pFs').click();
+if(e.key==='Escape') closePresent();
+});
+let tx=0;
+window.addEventListener('touchstart',e=>{tx=e.changedTouches[0].clientX},{passive:true});
+window.addEventListener('touchend',e=>{
+if(document.getElementById('present').classList.contains('hidden')) return;
+const dx=e.changedTouches[0].clientX-tx;
+if(Math.abs(dx)>50) show(idx+(dx<0?1:-1));
+},{passive:true});
+function home(){
+document.getElementById('main').innerHTML=`
+<section class="home"><div class="eyebrow">Classroom masterclass · Sales team script system</div><h1>Annuity Factory Masterclass</h1><p class="lead">Generational Wealth Sales for Middle America</p><p class="thesis">Flip the script: stop selling complexity up-market. Sell guaranteed income, principal safety, and family protection to the households that actually buy — middle and modest-income families, including Medicare and Medicaid populations.</p><p class="tagline">Against the grain. For the majority.</p><div class="cta-row"><button class="btn primary" id="goPresent">Launch live slideshow</button><button class="btn" id="goCourse">Open full course</button><button class="btn" id="goPlaybook">Team playbook</button></div><div class="grid3"><div class="card"><h3>Real buyers</h3><p>Median owner income $79k · 70% under $100k · not UHNW myth</p></div><div class="card"><h3>Zero floor</h3><p>FIA math: participate upside, contractual 0% market-loss floor</p></div><div class="card"><h3>Close the gap</h3><p>50% willing · ~12% buy — education + 5-step system is the edge</p></div></div><div class="chapters"><a class="chapter" href="#course"><div class="meta"><span class="badge">Ch 1</span><span class="badge accent">$79,000</span></div><h3>The $79K Reality</h3><p>Demographics, motivations, Annuity Puzzle, charts</p></a><a class="chapter" href="#course"><div class="meta"><span class="badge">Ch 2</span><span class="badge accent">0% floor</span></div><h3>Zero Is Your Hero</h3><p>PPVA vs FIA, credit math, IRC §72, guaranty associations</p></a><a class="chapter" href="#course"><div class="meta"><span class="badge">Ch 3</span><span class="badge accent">50% → 12%</span></div><h3>Close the Vulnerability Gap</h3><p>Ethical 5-step close for middle & modest-income households</p></a></div></section>`;
+document.getElementById('goPresent').onclick=()=>openPresent(0);
+document.getElementById('goCourse').onclick=course;
+document.getElementById('goPlaybook').onclick=playbook;
+document.querySelectorAll('.chapter').forEach(a=>a.onclick=e=>{e.preventDefault();course()});
+}
+function course(){
+const d=DATA.demo;
+document.getElementById('main').innerHTML=`
+<section class="course-view"><div class="eyebrow">Full curriculum</div><h1>Three chapters. One system.</h1><p>Use Present mode for Google Meet. Use this page for deep study on iPad.</p><h2>Chapter 1 — The $79K Reality</h2><div class="stats"><div class="stat"><div class="l">Median income</div><div class="v">$${(d.medianIncome/1000).toFixed(0)}k</div></div><div class="stat"><div class="l">Under $100k</div><div class="v">${d.under100k}%</div></div><div class="stat"><div class="l">Under $50k</div><div class="v">${d.under50k}%</div></div><div class="stat"><div class="l">Retired owners</div><div class="v">${d.retired}%</div></div></div><div class="chart-wrap" style="margin-top:14px"><canvas class="chart" id="cIncome"></canvas></div><div class="script script-card"><div class="lbl">Opening script</div><div class="body">There's a myth that annuities are only for the wealthy. Median owner household earns about $79,000. 70% of owners earn under $100,000. You are the core market.</div></div><h2>Chapter 2 — Zero Is Your Hero</h2><p>Carriers place ~90–95% of premium in high-grade fixed income. Excess yield buys call options. Credited rate:</p><div class="formula">R_credited = min(C, max(0, R_index × P − S))</div><div class="chart-wrap"><canvas class="chart" id="cFia"></canvas></div><p style="margin-top:12px">Tax: IRC §72 LIFO on partials; exclusion ratio on annuitization; +10% before 59½ on taxable earnings. Guaranty: often $250k PV (higher in NY/NJ/WA).</p><h2>Chapter 3 — Close the Vulnerability Gap</h2>
+${DATA.steps.map(s=>`
+<div class="card" style="margin:12px 0"><div class="meta"><span class="badge accent">Step ${s.id}</span></div><h3 style="margin:8px 0">${s.title}</h3><div class="formula" style="font-size:.95rem">${s.formula}</div><p><strong style="color:var(--fg)">Action:</strong> ${s.action}</p><div class="script script-card"><div class="lbl">Script</div><div class="body">${s.script}</div></div></div>`).join('')}
+<h2>Objection stack</h2>
+${DATA.objections.map(([q,a])=>`<div class="card" style="margin:10px 0"><h3 style="margin:0 0 6px">“${q}”</h3><p>${a}</p></div>`).join('')}
+<div class="cta-row" style="margin-top:28px"><button class="btn primary" id="cPresent">Launch slideshow</button><button class="btn" id="cHome">Home</button></div></section>`;
+requestAnimationFrame(()=>{
+drawBar(document.getElementById('cIncome'), DATA.income.map(x=>({t:x.t,p:x.p,c:x.c})));
+drawGroup(document.getElementById('cFia'), DATA.fia);
+});
+document.getElementById('cPresent').onclick=()=>openPresent(0);
+document.getElementById('cHome').onclick=home;
+}
+function playbook(){
+document.getElementById('main').innerHTML=`
+<section class="course-view"><div class="eyebrow">One-page deployment</div><h1>Sales Team Playbook</h1><div class="stats"><div class="stat"><div class="l">Median owner income</div><div class="v">$79k</div></div><div class="stat"><div class="l">Under $100k</div><div class="v">70%</div></div><div class="stat"><div class="l">Principal safety</div><div class="v">89%</div></div><div class="stat"><div class="l">Willing → buy</div><div class="v">50→13%</div></div></div><h2>5-step sequence</h2>
+${DATA.steps.map(s=>`<div class="card" style="margin:10px 0"><strong>Step ${s.id}: ${s.title}</strong><p style="margin-top:6px">${s.action}</p><div class="formula" style="font-size:.9rem;margin-top:10px">${s.formula}</div></div>`).join('')}
+<h2>Word-for-word scripts</h2>
+${DATA.steps.map(s=>`<div class="script script-card"><div class="lbl">Step ${s.id} · ${s.title}</div><div class="body">${s.script}</div></div>`).join('')}
+<div class="cta-row"><button class="btn primary" id="pbPresent">Present</button><button class="btn" id="pbHome">Home</button></div></section>`;
+document.getElementById('pbPresent').onclick=()=>openPresent(0);
+document.getElementById('pbHome').onclick=home;
+}
+document.getElementById('btnPresent').onclick=()=>openPresent(0);
+document.getElementById('btnCourse').onclick=course;
+document.getElementById('btnPlaybook').onclick=playbook;
+home();
+// Deep link support
+if(location.hash==='#present') openPresent(0);
+if(location.hash==='#course') course();
+if(location.hash==='#playbook') playbook();
+</script></body></html>
